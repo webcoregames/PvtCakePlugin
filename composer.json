@@ -8,6 +8,17 @@
         "cakephp/debug_kit": "dev-master",
         "cakedc/migrations": "dev-master",
         "ceeram/clear_cache": "dev-master",
-        "mustache/mustache": "dev-master"
-    }
+        "mustache/mustache": "dev-master",
+        "pear-cakephp/cakephp": "2.3.7"
+    },
+    "config": {
+        "vendor-dir": "Vendor/"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url":  "/Users/joaojose/projects/PIVOT/PivotCakePlugin"
+        }
+    ],
+    "minimum-stability": "dev"
 }
