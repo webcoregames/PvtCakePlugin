@@ -1,12 +1,10 @@
 {
     "name": "pivot/cake-plugin",
     "description": "Plugin CakePHP",
+
     "type": "cakephp-plugin",
-    "repositories": [
-    ],
     "require": {
         "composer/installers": "*",
-
         "cakephp/debug_kit": "dev-master",
         "cakedc/migrations": "dev-master",
         "ceeram/clear_cache": "dev-master",
