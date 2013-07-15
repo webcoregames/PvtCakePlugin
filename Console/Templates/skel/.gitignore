@@ -1,0 +1,7 @@
+tmp/
+Vendor/
+Plugin/
+Config/database.php
+Config/general.php
+Config/email.php
+npm-debug.log
