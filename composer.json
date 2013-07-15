@@ -16,6 +16,10 @@
     },
     "repositories": [
         {
+            "type": "pear",
+            "url": "http://pear.cakephp.org"
+        },
+        {
             "type": "vcs",
             "url":  "/Users/joaojose/projects/PIVOT/PivotCakePlugin"
         }
