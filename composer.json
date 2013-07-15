@@ -1,0 +1,26 @@
+{
+    "name": "pivot/cake-plugin",
+    "description": "Plugin CakePHP",
+    "authors": [
+        {
+            "name": "Joao Jose Pedrini",
+            "email": "joaojosepedrini@gmail.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "pear",
+            "url": "http://pear.cakephp.org"
+        }
+    ],
+    "config": {
+        "vendor-dir": "Vendor/"
+    },
+    "require": {
+        "pear-cakephp/cakephp": "2.3.*",
+        "cakephp/debug_kit": "2.2.*",
+        "cakedc/migrations": "2.2.*",
+        "ceeram/clear_cache": "1.0.*",
+        "mustache/mustache": "2.3.*"
+    }
+}
