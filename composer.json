@@ -1,24 +1,13 @@
 {
     "name": "pivot/cake-plugin",
     "description": "Plugin CakePHP",
-
     "type": "cakephp-plugin",
     "require": {
         "composer/installers": "*",
         "cakephp/debug_kit": "dev-master",
         "cakedc/migrations": "dev-master",
         "ceeram/clear_cache": "dev-master",
-        "mustache/mustache": "dev-master",
-        "pear-cakephp/cakephp": "2.3.7"
+        "mustache/mustache": "dev-master"
     },
-    "config": {
-        "vendor-dir": "Vendor/"
-    },
-    "repositories": [
-        {
-            "type": "pear",
-            "url": "http://pear.cakephp.org"
-        }
-    ],
     "minimum-stability": "dev"
 }
