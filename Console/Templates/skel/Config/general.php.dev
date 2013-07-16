@@ -1,5 +1,6 @@
 <?php
 	$config = array(
+	    'debug' => 2,
 		'Facebook' => array(
 			'appId' => '',
             'appSecret' => '',
@@ -9,7 +10,7 @@
 		'GoogleAnalytics' => array(
 			'ua' => ''
 		),
-		Internal' => array(
+		'Internal' => array(
             'ip' => array('201.87.123.165', '177.32.219.146',  '127.0.0.1')
         )
 	);

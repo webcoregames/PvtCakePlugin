@@ -33,7 +33,9 @@
  * In production mode, flash messages redirect after a time interval.
  * In development mode, you need to click the flash message to continue.
  */
-	Configure::write('debug', 2);
+if (file_exists(dirname(__FILE__) . DS . 'general.php')) {
+    Configure::load('general');
+}
 
 /**
  * Configure the Error handler used to handle errors for your application. By default
