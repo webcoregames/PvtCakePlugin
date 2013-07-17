@@ -33,7 +33,56 @@ App::uses('Controller', 'Controller');
  * @link		http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
-    public $viewClass = 'PivotCakePlugin.Mustache';
+
+    public $components = array(
+        'DebugKit.Toolbar',
+        'Session',
+        'Auth' => array(
+            'flash' => array(
+                'element' => 'alert',
+                'key' => 'auth',
+                'params' => array(
+                    'plugin' => 'BoostCake',
+                    'class' => 'alert-error'
+                )
+            )
+        )
+    );
+
+    public $helpers = array(
+        'Session',
+        'Html' => array('className' => 'BoostCake.BoostCakeHtml'),
+        'Form' => array('className' => 'BoostCake.BoostCakeForm'),
+        'Paginator' => array('className' => 'BoostCake.BoostCakePaginator'),
+    );
+
+    public function beforeFilter()
+    {
+        header('P3P:CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"');
+        if (empty($this->request->params['manager'])) {
+            $this->viewClass = 'PivotCakePlugin.Mustache';
+            $this->Auth->allow();
+        }
+        if (isset($this->request->params['manager']) && $this->request->params['manager'] === true) {
+            $this->layout = 'manager';
+            $this->helpers['Html'] = array('className' => 'BoostCake.BoostCakeHtml');
+            $this->helpers['Form'] = array('className' => 'BoostCake.BoostCakeForm');
+            $this->helpers['Paginator'] = array('className' => 'BoostCake.BoostCakePaginator');
+        }
+        parent::beforeFilter();
+    }
+
+    public function isAuthorized($user = null)
+    {
+        if (empty($this->request->params['manager'])) {
+            return true;
+        }
+        if (isset($this->request->params['manager'])) {
+            return isset($user['id']);
+        }
+        return true;
+    }
+
     public function beforeRender() {
         if( $this->request->is('ajax')) {
             $this->response->type('application/json');
