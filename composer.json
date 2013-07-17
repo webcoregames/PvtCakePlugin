@@ -1,5 +1,5 @@
 {
-    "name": "pivot/cake-plugin",
+    "name": "pivot/pivot-cake-plugin",
     "description": "Plugin CakePHP",
     "type": "cakephp-plugin",
     "require": {
