@@ -34,6 +34,9 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller {
     public $viewClass = 'PivotCakePlugin.Mustache';
+    public $helpers = array(
+        'Includer'
+    );
     public function beforeRender() {
         if( $this->request->is('ajax')) {
             $this->response->type('application/json');

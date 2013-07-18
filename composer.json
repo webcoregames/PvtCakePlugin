@@ -1,6 +1,6 @@
 {
     "name": "pivot/pivot-cake-plugin",
-    "description": "Plugin CakePHP",
+    "description": "Plugi`n CakePHP",
     "type": "cakephp-plugin",
     "require": {
         "composer/installers": "*",
