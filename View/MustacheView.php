@@ -2,7 +2,7 @@
 App::uses('View', 'View');
 class MustacheView extends View {
     public function __construct(Controller $controller = null) {
-        $path = App::pluginPath('PivotCakePlugin') . 'webroot' . DS . 'app' . DS . 'templates';
+        $path = ROOT . DS .APP_DIR . DS . 'webroot' . DS . 'templates';
         $this->mustache = new Mustache_Engine(array(
             'cache' => TMP . 'cache',
             'loader' => new Mustache_Loader_FilesystemLoader($path, array('extension' => '.html')),
