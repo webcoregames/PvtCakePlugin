@@ -123,7 +123,7 @@ if (file_exists(dirname(__FILE__) . DS . 'general.php')) {
  *	`manager_index()` and `/manager/controller/index`
  *
  */
-	//Configure::write('Routing.prefixes', array('admin'));
+	Configure::write('Routing.prefixes', array('manager'));
 
 /**
  * Turn off all caching application-wide.

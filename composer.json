@@ -7,7 +7,8 @@
         "cakephp/debug_kit": "dev-master",
         "cakedc/migrations": "dev-master",
         "ceeram/clear_cache": "dev-master",
-        "mustache/mustache": "dev-master"
+        "mustache/mustache": "dev-master",
+        "slywalker/boost_cake": "dev-master"
     },
     "minimum-stability": "dev"
 }
