@@ -33,7 +33,6 @@ class ConsoleController extends Controller
             echo 'Error: ' . $e->getMessage();
         }
         exit;
-
     }
 
 }

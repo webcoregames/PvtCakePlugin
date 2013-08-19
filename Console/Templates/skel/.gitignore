@@ -1,7 +1,15 @@
+#GENERAL
+.DS_Store
+
+# BACK
 tmp/
 Vendor/
 Plugin/
 Config/database.php
 Config/general.php
 Config/email.php
+
+# FRONT
+node_modules/
+webroot/js/libs
 npm-debug.log
