@@ -19,9 +19,9 @@ class MustacheView extends View {
         if ($this->hasRendered) {
             return true;
         }
-        if (!$this->_helpersLoaded) {
-            $this->loadHelpers();
-        }
+
+        $this->loadHelpers();
+
         $this->Blocks->set('content', '');
         try {
             if ($view !== false) {
