@@ -15,6 +15,7 @@ class MustacheView extends View {
         parent::__construct($controller);
     }
     public function render($view = null, $layout = null) {
+
         $templates = array();
         if ($this->hasRendered) {
             return true;
@@ -29,7 +30,18 @@ class MustacheView extends View {
                 $viewFileName = $this->getMustacheTemplateName($view);
                 $this->getEventManager()->dispatch(new CakeEvent('View.beforeRender', $this, array($viewFileName)));
                 $this->Blocks->set('content', $this->mustache->render($viewFileName, $this->viewVars));
-                $templates["templates/".$viewFileName] = $this->mustache->getLoader()->load($viewFileName);
+                $templates['templates/'.$viewFileName] = $this->mustache->getLoader()->load($viewFileName);
+
+                $partials = (array_reduce($this->mustache->getTokenizer()->scan($templates['templates/'.$viewFileName]), function ($v, $a) {
+                    if (is_null($v)) { $v = array(); }
+                    if ($a['type'] == '>') {
+                        $v[] = $a['name'];
+                    }
+                    return $v;
+                }));
+                foreach($partials as $partial) {
+                    $templates['templates/'.$partial] = $this->mustache->getLoader()->load($partial);
+                }
                 $this->getEventManager()->dispatch(new CakeEvent('View.afterRender', $this, array($viewFileName)));
             }
         } catch (Exception $e) {
@@ -40,7 +52,9 @@ class MustacheView extends View {
         if ($layout === null) {
             $layout = $this->layout;
         }
+
         if ($layout && $this->autoLayout) {
+
             $layout = 'layouts' . DS . $layout;
             try {
 
@@ -73,6 +87,7 @@ class MustacheView extends View {
                 'script_for_skel' => $this->Blocks->get('script')
             ));
 
+
             if (!isset($this->viewVars['title_for_layout'])) {
                 $this->viewVars['title_for_layout'] = Inflector::humanize($this->viewPath);
             }
@@ -84,7 +99,7 @@ class MustacheView extends View {
             debug($e->getMessage());
         }
         if ($this->mustache->getLoader())
-        $this->hasRendered = true;
+            $this->hasRendered = true;
         return $this->Blocks->get('content');
     }
 
