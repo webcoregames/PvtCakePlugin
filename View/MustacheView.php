@@ -33,7 +33,7 @@ class MustacheView extends View {
                 $templates['templates/'.$viewFileName] = $this->mustache->getLoader()->load($viewFileName);
                 $partials = $this->mustache->getTokenizer()->scan($templates['templates/'.$viewFileName]);
                 if(!empty($partials)) {
-                    $partials = (array_reduce(, function ($v, $a) {
+                    $partials = (array_reduce($partials, function ($v, $a) {
                         if (is_null($v)) { $v = array(); }
                         if ($a['type'] == '>') {
                             $v[] = $a['name'];
