@@ -20,7 +20,7 @@ class ConsoleController extends Controller
 
         try {
             if ($this->request->is('internal')) {
-                App::uses('WebShellDispatcher', 'Lib');
+                App::uses('WebShellDispatcher', 'PivotCakePlugin.Lib');
                 $Dispatcher = new WebShellDispatcher($this->request->params['pass'], false);
                 $Dispatcher->dispatch();
                 echo '<pre>' . file_get_contents($Dispatcher->out)  . '</pre>';
