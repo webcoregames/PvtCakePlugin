@@ -31,17 +31,21 @@ class MustacheView extends View {
                 $this->getEventManager()->dispatch(new CakeEvent('View.beforeRender', $this, array($viewFileName)));
                 $this->Blocks->set('content', $this->mustache->render($viewFileName, $this->viewVars));
                 $templates['templates/'.$viewFileName] = $this->mustache->getLoader()->load($viewFileName);
-
-                $partials = (array_reduce($this->mustache->getTokenizer()->scan($templates['templates/'.$viewFileName]), function ($v, $a) {
-                    if (is_null($v)) { $v = array(); }
-                    if ($a['type'] == '>') {
-                        $v[] = $a['name'];
+                $partials = $this->mustache->getTokenizer()->scan($templates['templates/'.$viewFileName]);
+                if(!empty($partials)) {
+                    $partials = (array_reduce($partials, function ($v, $a) {
+                        if (is_null($v)) { $v = array(); }
+                        if ($a['type'] == '>') {
+                            $v[] = $a['name'];
+                        }
+                        return $v;
+                    }));  
+                    foreach($partials as $partial) {
+                        $templates['templates/'.$partial] = $this->mustache->getLoader()->load($partial);
                     }
-                    return $v;
-                }));
-                foreach($partials as $partial) {
-                    $templates['templates/'.$partial] = $this->mustache->getLoader()->load($partial);
                 }
+                
+                
                 $this->getEventManager()->dispatch(new CakeEvent('View.afterRender', $this, array($viewFileName)));
             }
         } catch (Exception $e) {
@@ -75,7 +79,7 @@ class MustacheView extends View {
         }
         try {
             $head = implode("\n\t", $this->_scripts);
-            $head .= $this->Blocks->get('meta') . $this->Blocks->get('css') ;
+            $head .= $this->Blocks->get('css') . $this->Blocks->get('meta');
             $tpl = 'var JST = window.JST || {};';
             foreach($templates as $key => $template) {
                 $tpl .= "JST['{$key}'] = ".json_encode($template) . ';';
