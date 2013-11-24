@@ -51,8 +51,7 @@ class AppController extends Controller {
     );
 
     public $helpers = array(
-        'Session',
-        'Includer'
+        'Session'
     );
 
     public function beforeFilter()
@@ -60,7 +59,9 @@ class AppController extends Controller {
         header('P3P:CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"');
         if (empty($this->request->params['manager'])) {
             $this->viewClass = 'PivotCakePlugin.Mustache';
+            $this->helpers = 'PivotCakePlugin.Includer';
             $this->Auth->allow();
+
         }
         if (isset($this->request->params['manager']) && $this->request->params['manager'] === true) {
             $this->layout = 'manager';

@@ -1,119 +1,124 @@
-<?php
+<?php 
 App::uses('View', 'View');
-class MustacheView extends View {
-    public function __construct(Controller $controller = null) {
-        $path = ROOT . DS .APP_DIR . DS . 'webroot' . DS . 'templates';
+class MultiMustacheView extends View {
+
+    public $templates = array();
+    
+    public function doMustache($view, $vars) {
+        $render = $this->mustache->render($view, $vars);
+        return $render;
+    }
+    protected function initMustache() {
+        App::uses('PivotCakePlugin.PivotMustacheLoader', 'Lib');
+        $assets = (Configure::read('debug') == 0) ? 'assets/' : 'developer/';
+
         $this->mustache = new Mustache_Engine(array(
-            'cache' => TMP . 'cache',
-            'loader' => new Mustache_Loader_FilesystemLoader($path, array('extension' => '.html')),
+            'cache' => TMP . 'cache' . DS . 'mustache',
+            'loader' => new PivotMustacheLoader( WWW_ROOT . $assets . 'templates', array('extension' => '.html')),
             'helpers' => array(
-                'url' => function($text) {
-                    return Router::url('/') . $text;
-                }
-            ),
+                'urls' => array(
+                    'base' => Router::url('/'),
+                    'site' => Router::url('/', true),
+                    'cdn' => Configure::read('CDN'),
+                    'assets' => $assets
+                )
+            )
         ));
-        parent::__construct($controller);
+    }
+    public function loadHelpers() {
+        if ($this->request->is('ajax')) {
+            return;
+        }
+        parent::loadHelpers();
+    }
+    protected function _serialize($serialize) {
+        if (is_array($serialize)) {
+            $data = array();
+            foreach ($serialize as $alias => $key) {
+                if (is_numeric($alias)) {
+                    $alias = $key;
+                }
+                if (array_key_exists($key, $this->viewVars)) {
+                    $data[$alias] = $this->viewVars[$key];
+                }
+            }
+            $data = !empty($data) ? $data : null;
+        } else {
+            $data = isset($this->viewVars[$serialize]) ? $this->viewVars[$serialize] : null;
+        }
+
+        if (version_compare(PHP_VERSION, '5.4.0', '>=') && Configure::read('debug')) {
+            return json_encode($data, JSON_PRETTY_PRINT);
+        }
+
+        return json_encode($data);
     }
     public function render($view = null, $layout = null) {
-
-        $templates = array();
         if ($this->hasRendered) {
             return true;
         }
+        if ($this->request->is('ajax')) {
+            $this->response->type('json');
+            $return = $this->_serialize(array_keys($this->viewVars));
+            if (!empty($this->viewVars['_jsonp'])) {
+                $jsonpParam = $this->viewVars['_jsonp'];
+                if ($this->viewVars['_jsonp'] === true) {
+                    $jsonpParam = 'callback';
+                }
+                if (isset($this->request->query[$jsonpParam])) {
+                    $return = sprintf('%s(%s)', h($this->request->query[$jsonpParam]), $return);
+                    $this->response->type('js');
+                }
+            }
+            return $return;
+        } else {
+            $this->initMustache();
+            $this->Blocks->set('content', '');
 
-        $this->loadHelpers();
-
-        $this->Blocks->set('content', '');
-        try {
             if ($view !== false) {
-                $this->_currentType = self::TYPE_VIEW;
-                $viewFileName = $this->getMustacheTemplateName($view);
-                $this->getEventManager()->dispatch(new CakeEvent('View.beforeRender', $this, array($viewFileName)));
-                $this->Blocks->set('content', $this->mustache->render($viewFileName, $this->viewVars));
-                $templates['templates/'.$viewFileName] = $this->mustache->getLoader()->load($viewFileName);
-                $partials = $this->mustache->getTokenizer()->scan($templates['templates/'.$viewFileName]);
-                if(!empty($partials)) {
-                    $partials = (array_reduce($partials, function ($v, $a) {
-                        if (is_null($v)) { $v = array(); }
-                        if ($a['type'] == '>') {
-                            $v[] = $a['name'];
-                        }
-                        return $v;
-                    }));  
-                    foreach($partials as $partial) {
-                        $templates['templates/'.$partial] = $this->mustache->getLoader()->load($partial);
-                    }
+                if (!is_array($view)) {
+                    $view = array($view);
                 }
-                
-                
-                $this->getEventManager()->dispatch(new CakeEvent('View.afterRender', $this, array($viewFileName)));
-            }
-        } catch (Exception $e) {
-            debug($e->getMessage());
-        }
-
-//
-        if ($layout === null) {
-            $layout = $this->layout;
-        }
-
-        if ($layout && $this->autoLayout) {
-
-            $layout = 'layouts' . DS . $layout;
-            try {
-
-
-                if (!isset($this->viewVars['title_for_layout'])) {
-                    $this->viewVars['title_for_layout'] = Inflector::humanize($this->viewPath);
+                $content = array();
+                $this->getEventManager()->dispatch(new CakeEvent('View.beforeRender', $this, array(join(' ', $view))));
+                foreach ($view as $v) {
+                    $viewFileName = $this->getMustacheTemplateName($v);
+                    $content[] = $this->doMustache($viewFileName, $this->viewVars);
                 }
-                $content = $this->mustache->render(
-                    $layout,
-                    array_merge($this->viewVars, array( 'content_for_layout' => $this->Blocks->get('content')))
-                );
-                $templates["templates/".$layout] = $this->mustache->getLoader()->load($layout);
-
-                $this->Blocks->set('content', $content);
-            } catch(Exception $e) {
-                debug($e->getMessage());
+                $this->getEventManager()->dispatch(new CakeEvent('View.afterRender', $this, array(join(' ', $view))));  
+                $this->Blocks->set('content', join("\n", $content));
             }
-        }
-        try {
-            $head = implode("\n\t", $this->_scripts);
-            $head .= $this->Blocks->get('css') . $this->Blocks->get('meta');
-            $tpl = 'var JST = window.JST || {};';
-            foreach($templates as $key => $template) {
-                $tpl .= "JST['{$key}'] = ".json_encode($template) . ';';
+                
+            if ($layout === null) {
+                $layout = $this->layout;
             }
-            $this->Blocks->concat('script', $this->Html->scriptBlock($tpl));
-            $this->viewVars = array_merge($this->viewVars, array(
-                'content_for_skel' => $this->Blocks->get('content'),
-                'head_for_skel' => $head,
-                'script_for_skel' => $this->Blocks->get('script')
-            ));
+            if ($layout && $this->autoLayout) {
 
-
-            if (!isset($this->viewVars['title_for_layout'])) {
-                $this->viewVars['title_for_layout'] = Inflector::humanize($this->viewPath);
-            }
-            $content = $this->mustache->render(
-                'layouts/skel', $this->viewVars
-            );
-            $this->Blocks->set('content', $content);
-        } catch(Exception $e) {
-            debug($e->getMessage());
-        }
-        if ($this->mustache->getLoader())
+                $layout = 'layouts' . DS . $layout;
+                
+                $content = $this->doMustache($layout, array_merge($this->viewVars, array('content_for_layout' => $this->Blocks->get('content'))));
+                $head = join("\n\t", $this->_scripts);
+                $this->viewVars['templates'] = $this->mustache->getLoader()->getTemplates();
+                $this->getEventManager()->dispatch(new CakeEvent('View.beforeLayout', $this, array('')));
+                $head .= $this->Blocks->get('css') . $this->Blocks->get('meta');
+                $this->viewVars = array_merge($this->viewVars, array(
+                    'content_for_skel' => $content,
+                    'head_for_skel' => $head,
+                    'script_for_skel' => $this->Blocks->get('script')
+                ));
+                $this->Blocks->set('content', $this->mustache->render('layouts/skel', $this->viewVars));
+            }   $this->getEventManager()->dispatch(new CakeEvent('View.afterLayout', $this, array('')));
+            
             $this->hasRendered = true;
-        return $this->Blocks->get('content');
+            return $this->Blocks->get('content');
+        }
     }
 
     private function getMustacheTemplateName($name) {
         $subDir = null;
-
         if (!is_null($this->subDir)) {
             $subDir = $this->subDir . DS;
         }
-
         if ($name === null) {
             $name = $this->view;
         }

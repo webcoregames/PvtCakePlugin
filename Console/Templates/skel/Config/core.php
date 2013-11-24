@@ -241,7 +241,7 @@ if (file_exists(dirname(__FILE__) . DS . 'general.php')) {
  * Uncomment this line and correct your server timezone to fix
  * any date & time related errors.
  */
-	//date_default_timezone_set('UTC');
+	date_default_timezone_set('America/Sao_Paulo');
 
 /**
  *
