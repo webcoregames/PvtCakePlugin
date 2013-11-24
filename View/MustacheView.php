@@ -1,6 +1,6 @@
 <?php 
 App::uses('View', 'View');
-class MultiMustacheView extends View {
+class MustacheView extends View {
 
     public $templates = array();
     
