@@ -33,7 +33,7 @@ class IncluderHelper extends Helper {
             } else {
                 $this->addAssetsFiles(array(
                     'style' => array(
-                        '/assets/styles/fonts/'. $includer .'-fonts.min.css?v='.$version
+                        '/assets/styles/fonts/'. $includer .'-fonts.min.css?v='.$version,
                         '/assets/styles/'. $includer .'-styles.min.css?v='.$version
                     ),
                     'header' => array(
