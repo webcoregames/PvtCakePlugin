@@ -1,44 +1,48 @@
 <?php
 class IncluderHelper extends Helper {
+    
+
     public $settings = array(
         'includers' => array(
-            'application' => array(
-                'developer' => array(
+            'application'
+        )
+    );
+    public function beforeLayout($layout) {
+        $this->includers();
+    
+    }
+    private function includers() {
+    
+        $version = Configure::read('Version') ?: '0';
+        foreach ($this->settings['includers'] as $includer) {
+            if (Configure::read('debug') > 0) {
+                $this->addAssetsFiles(array(
                     'style' => array(
-                        '/developer/styles/fonts/fonts.css',
-                        '/developer/styles/main.css'
+                        '/developer/styles/fonts/'. $includer .'-fonts.css',
+                        '/developer/styles/'. $includer .'-styles.css'
                     ),
                     'header' => array(
                         '/developer/scripts/vendors/modernirz/modernirz.js'
                     ),
                     'script' => array(
                         '/developer/scripts/vendors/requirejs/require.js' => array(
-                            'data-main' => Router::url('/developer/scripts/application-config.js')
+                            'data-main' => Router::url('/developer/scripts/'. $includer .'-config.js')
                         )
                     )
-                ),
-                'production' => array(
+                ));
+            } else {
+                $this->addAssetsFiles(array(
                     'style' => array(
-                        '/assets/styles/fonts/fonts.css?v='.Configure::read('Version')
-                        '/assets/styles/dist.css?v='.Configure::read('Version')
+                        '/assets/styles/fonts/'. $includer .'-fonts.min.css?v='.$version
+                        '/assets/styles/'. $includer .'-styles.min.css?v='.$version
                     ),
                     'header' => array(
-                        '/assets/scripts/header.min.js?v='.Configure::read('Version'), 
+                        '/assets/scripts/'. $includer .'-header.min.js?v='.$version, 
                     ),
                     'script' => array(
-                        '/assets/scripts/application.min.js?v='.Configure::read('Version'),
-                    ),
-                )    
-            )
-        )
-        
-    );
-    public function beforeLayout($layout) {
-        foreach ($this->settings['includers'] as $what => $settings) {
-            if (Configure::read('debug') > 0) {
-                $this->addAssetsFiles($settings['developer']);
-            } else {
-                $this->addAssetsFiles($settings['production']);
+                        '/assets/scripts/'. $includer .'-body.min.js?v='.$version,
+                    )
+                ));
             }
         }
     }
