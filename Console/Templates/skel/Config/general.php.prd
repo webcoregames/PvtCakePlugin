@@ -14,6 +14,6 @@
             'ip' => array('201.87.123.165',  '127.0.0.1')
         ),
         'Version' => '0',
-        'CDN' => BASE_URL
+        'CDN' => 'http://localhost/'
 	);
 ?>

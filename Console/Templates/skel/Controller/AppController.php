@@ -58,8 +58,8 @@ class AppController extends Controller {
     {
         header('P3P:CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"');
         if (empty($this->request->params['manager'])) {
-            $this->viewClass = 'PivotCakePlugin.Mustache';
-            $this->helpers = 'PivotCakePlugin.Includer';
+            // $this->viewClass = 'PivotCakePlugin.Mustache';
+            // $this->helpers = 'PivotCakePlugin.Includer';
             $this->Auth->allow();
 
         }
