@@ -13,21 +13,26 @@ class ConsoleController extends Controller
 
     public function run()
     {
-        $this->request->addDetector('internal', array(
+        $this->request->addDetector('internal-ip', array(
             'env' => 'REMOTE_ADDR',
             'options' => Configure::read('Internal.ip')
         ));
+        $this->request->addDetector('internal-host', array(
+            'env' => 'HTTP_HOST',
+            'options' => array('Internal.host')
+        ));
 
         try {
-            if ($this->request->is('internal')) {
+            if ($this->request->is('internal-ip') || $this->request->is('internal-host')) {
                 App::uses('WebShellDispatcher', 'PivotCakePlugin.Lib');
                 $Dispatcher = new WebShellDispatcher($this->request->params['pass'], false);
                 $Dispatcher->dispatch();
                 echo '<pre>' . file_get_contents($Dispatcher->out)  . '</pre>';
                 unlink($Dispatcher->out);
             } else {
-                echo 'Error de IP';
-                // debug($_SERVER);
+
+                echo 'Error: ' . env('REMOTE_ADDR') . '@' . env('HTTP_HOST');
+                
             }
         } catch (Exception $e) {
             echo 'Error: ' . $e->getMessage();
