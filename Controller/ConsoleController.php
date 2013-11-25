@@ -19,7 +19,7 @@ class ConsoleController extends Controller
         ));
         $this->request->addDetector('internal-host', array(
             'env' => 'HTTP_HOST',
-            'options' => array('Internal.host')
+            'options' => Configure::read('Internal.ip')
         ));
 
         try {
