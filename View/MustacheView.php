@@ -4,23 +4,34 @@ class MustacheView extends View {
 
     public $templates = array();
     
+    public function __construct ( Controller $controller = null ) {
+        if (!isset($controller->templateDir)) {
+            
+            $this->templateDir = WWW_ROOT . $this->getAssets() . '/application-templates';
+        } else {
+            $this->templateDir = $controller->templateDir;
+        }
+        parent::__construct($controller);
+    }
+    private function getAssets() {
+        return (Configure::read('debug') > 0) ? 'developer' : 'assets';
+    }
     public function doMustache($view, $vars) {
         $render = $this->mustache->render($view, $vars);
         return $render;
     }
     protected function initMustache() {
-        App::uses('PivotCakePlugin.PivotMustacheLoader', 'Lib');
-        $assets = (Configure::read('debug') == 0) ? 'assets/' : 'developer/';
-
+        App::uses('PivotMustacheLoader', 'PivotCakePlugin.Lib');
+        
         $this->mustache = new Mustache_Engine(array(
             'cache' => TMP . 'cache' . DS . 'mustache',
-            'loader' => new PivotMustacheLoader( WWW_ROOT . $assets . 'templates', array('extension' => '.html')),
+            'loader' => new PivotMustacheLoader( $this->templateDir, array('extension' => '.html')),
             'helpers' => array(
                 'urls' => array(
                     'base' => Router::url('/'),
                     'site' => Router::url('/', true),
                     'cdn' => Configure::read('CDN'),
-                    'assets' => $assets
+                    'assets' => $this->getAssets()
                 )
             )
         ));
@@ -57,6 +68,7 @@ class MustacheView extends View {
         if ($this->hasRendered) {
             return true;
         }
+        
         if ($this->request->is('ajax')) {
             $this->response->type('json');
             $return = $this->_serialize(array_keys($this->viewVars));

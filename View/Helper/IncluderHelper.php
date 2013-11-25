@@ -1,6 +1,6 @@
 <?php
 class IncluderHelper extends Helper {
-    
+    public $helpers = array('Html');
 
     public $settings = array(
         'includers' => array(
@@ -22,7 +22,7 @@ class IncluderHelper extends Helper {
                         '/developer/styles/'. $includer .'-styles.css'
                     ),
                     'header' => array(
-                        '/developer/scripts/vendors/modernirz/modernirz.js'
+                        '/developer/scripts/vendors/modernizr/modernizr.js'
                     ),
                     'script' => array(
                         '/developer/scripts/vendors/requirejs/require.js' => array(
@@ -58,7 +58,7 @@ class IncluderHelper extends Helper {
                 'block' => 'meta'
             )
         );
-        foreach ($settings['scripts'] as $key => $script) {
+        foreach ($settings['script'] as $key => $script) {
             $attributes = array();
             if (!is_numeric($key)) {
                 $attributes = $script;
