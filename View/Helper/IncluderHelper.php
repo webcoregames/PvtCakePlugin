@@ -3,9 +3,7 @@ class IncluderHelper extends Helper {
     public $helpers = array('Html');
 
     public $settings = array(
-        'includers' => array(
-            'application'
-        )
+        'includers' => 'application'
     );
     public function beforeLayout($layout) {
         $this->includers();
@@ -14,7 +12,7 @@ class IncluderHelper extends Helper {
     private function includers() {
     
         $version = Configure::read('Version') ?: '0';
-        foreach ($this->settings['includers'] as $includer) {
+        foreach ( preg_split("/[\s,]+/", $this->settings['includers']) as $includer) {
             if (Configure::read('debug') > 0) {
                 $this->addAssetsFiles(array(
                     'style' => array(
