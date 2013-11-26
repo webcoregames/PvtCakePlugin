@@ -5,13 +5,11 @@ class MustacheView extends View {
     public $templates = array();
     
     public function __construct ( Controller $controller = null ) {
-        if (!isset($controller->nameAssets)) {
-            
-            $this->templateDir = WWW_ROOT . $this->getAssets() . '/' . . '-templates';
-        } else {
-            
+        $this->asset = 'application';
+        if (isset($controller->asset)) {
+            $this->asset = $controller->asset;
         }
-        $this->templateDir = $controller->templateDir;
+        $this->templateDir = WWW_ROOT . $this->getAssets() . '/' . $this->asset. '-templates';
         parent::__construct($controller);
     }
     private function getAssets() {
