@@ -7,18 +7,14 @@
 	</title>
 	<?php
 		echo $this->Html->meta('icon');
-
 		echo $this->fetch('meta');
-        echo $this->Html->css(array('/bootstrap/css/bootstrap', 'main'));
 		echo $this->fetch('css');
-
-
 	?>
 </head>
 <body>
     <div class="container">
         <div class="masthead">
-            <div class="muted logo"><?php echo $this->Html->image('logo.png')?> <span></span></span></div>
+            <div class="muted logo"></div>
             <div class="navbar">
                 <div class="navbar-inner">
                     <div class="container">
@@ -37,12 +33,7 @@
         <?php echo $this->fetch('content'); ?>
     </div>
     <?php
-        echo $this->Html->script(array(
-            'jquery-1.10.2.min',
-            'jquery-migrate-1.2.1.min',
-            '/bootstrap/js/bootstrap',
-            'main'
-        ));
+        
         echo $this->fetch('script');
     ?>
 </body>

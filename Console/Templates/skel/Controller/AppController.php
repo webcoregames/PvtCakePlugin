@@ -59,12 +59,13 @@ class AppController extends Controller {
         header('P3P:CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"');
         if (empty($this->request->params['manager'])) {
             // $this->viewClass = 'PivotCakePlugin.Mustache';
-            // $this->helpers = 'PivotCakePlugin.Includer';
+            // $this->helpers['PivotCakePlugin.Includer'] = array('includers' => 'site');
             $this->Auth->allow();
 
         }
         if (isset($this->request->params['manager']) && $this->request->params['manager'] === true) {
             $this->layout = 'manager';
+            // $this->helpers['PivotCakePlugin.Includer'] = array('includers' => 'admin');
             $this->helpers['Html'] = array('className' => 'BoostCake.BoostCakeHtml');
             $this->helpers['Form'] = array('className' => 'BoostCake.BoostCakeForm');
             $this->helpers['Paginator'] = array('className' => 'BoostCake.BoostCakePaginator');

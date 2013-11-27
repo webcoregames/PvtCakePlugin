@@ -30,7 +30,7 @@ class MustacheView extends View {
                     'base' => Router::url('/'),
                     'site' => Router::url('/', true),
                     'cdn' => Configure::read('CDN'),
-                    'assets' => $this->getAssets()
+                    'assets' => Router::url($this->getAssets())
                 )
             )
         ));
