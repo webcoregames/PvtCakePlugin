@@ -57,9 +57,9 @@ class MustacheView extends View {
             $data = isset($this->viewVars[$serialize]) ? $this->viewVars[$serialize] : null;
         }
 
-        if (version_compare(PHP_VERSION, '5.4.0', '>=') && Configure::read('debug')) {
-            return json_encode($data, JSON_PRETTY_PRINT);
-        }
+        // if (version_compare(PHP_VERSION, '5.4.0', '>=') && Configure::read('debug')) {
+        //     return json_encode($data, JSON_PRETTY_PRINT);
+        // }
 
         return json_encode($data);
     }
@@ -105,18 +105,21 @@ class MustacheView extends View {
             }
             if ($layout && $this->autoLayout) {
 
-                $layout = 'layouts' . DS . $layout;
                 
+                $alldata = $this->_serialize(array_keys($this->viewVars));
+                $layout = 'layouts' . DS . $layout;
                 $content = $this->doMustache($layout, array_merge($this->viewVars, array('content_for_layout' => $this->Blocks->get('content'))));
                 $head = join("\n\t", $this->_scripts);
-                $this->viewVars['templates'] = $this->mustache->getLoader()->getTemplates();
+                $this->viewVars['templates'] = json_encode($this->mustache->getLoader()->getTemplates());
                 $this->getEventManager()->dispatch(new CakeEvent('View.beforeLayout', $this, array('')));
                 $head .= $this->Blocks->get('css') . $this->Blocks->get('meta');
                 $this->viewVars = array_merge($this->viewVars, array(
                     'content_for_skel' => $content,
                     'head_for_skel' => $head,
-                    'script_for_skel' => $this->Blocks->get('script')
+                    'script_for_skel' => $this->Blocks->get('script'),
+                    'alldata' => $alldata
                 ));
+
                 $this->Blocks->set('content', $this->mustache->render('layouts/skel', $this->viewVars));
             }   $this->getEventManager()->dispatch(new CakeEvent('View.afterLayout', $this, array('')));
             
