@@ -14,14 +14,18 @@ class IncluderHelper extends Helper {
         $version = Configure::read('Version') ?: '0';
         foreach ( preg_split("/[\s,]+/", $this->settings['includers']) as $includer) {
             if (Configure::read('debug') > 0) {
+                $headers = array();
+                if (!empty($this->settings[$includer])) {
+                    $headers = $this->settings[$includer];
+                }
                 $this->addAssetsFiles(array(
                     'style' => array(
                         '/developer/styles/fonts/'. $includer .'-fonts.css',
                         '/developer/styles/'. $includer .'-styles.css'
                     ),
-                    'header' => array(
+                    'header' => array_merge(array(
                         '/developer/scripts/vendors/modernizr/modernizr.js'
-                    ),
+                    ), $headers),
                     'script' => array(
                         '/developer/scripts/vendors/requirejs/require.js' => array(
                             'data-main' => Router::url('/developer/scripts/'. $includer .'-config.js')
