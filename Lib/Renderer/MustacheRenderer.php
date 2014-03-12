@@ -1,15 +1,16 @@
 <?php
 class MustacheRenderer {
-    public function __constructor(View $View) {
-        $this->View = $View;
-        App::uses('MustacheLoader', 'PvtCake.Lib.Renderer');
+    public function __construct(View $View) {
+        $this->View = &$View;
+
+        App::uses('MustacheLoader', 'PvtCake.Lib/Renderer');
         $this->mustache = new Mustache_Engine(array(
             'cache' => TMP . 'cache' . DS . 'mustache',
-            'loader' => new PivotMustacheLoader($this->View->template, array('extension' => '.html'))
+            'loader' => new MustacheLoader($this->View->template, array('extension' => '.html'))
         ));
     }
 
-    private function name($name) {
+    public function name($name) {
         $subDir = null;
         if (!is_null($this->View->subDir)) {
             $subDir = $this->View->subDir . DS;
@@ -36,36 +37,32 @@ class MustacheRenderer {
         return $name;
     }
 
-    public function compile($views, $vars) {
-        $render = $this->mustache->render($this->name($view), $vars);
+    public function compile($view, $vars) {
+        $render = $this->mustache->render($view, $vars);
         return $render;
     }
-    public function render($views, $vars) {
+    public function render($views, $vars, $layout = null) {
         $this->View->Blocks->set('content', '');
         $content = array();
-        $this->View->getEventManager()->dispatch(new CakeEvent('View.beforeRender', $this->View, array(join(' ', $view))));
+        $this->View->getEventManager()->dispatch(new CakeEvent('View.beforeRender', $this->View, array(join(' ', $views))));
         foreach ($views as $v) {
-            $content[] = $this->compile($v, $vars);
+            $content[] = $this->compile($this->name($v), $vars);
         }
         $this->View->Blocks->set('content', join("\n", $content));
-        $this->View->getEventManager()->dispatch(new CakeEvent('View.afterRender', $this->View, array(join(' ', $view))));  
+        $this->View->getEventManager()->dispatch(new CakeEvent('View.afterRender', $this->View, array(join(' ', $views))));
         
-            
-        if ($layout === null) {
-            $layout = $this->layout;
-        }
-        if ($layout && $this->autoLayout) {
+        if ($layout && $this->View->autoLayout) {
             $this->View->getEventManager()->dispatch(new CakeEvent('View.beforeLayout', $this->View, array('')));
             // Renderizando Layout
-            $layout = 'layouts' . DS . $layout;
+            
             $content = $this->compile($layout, array_merge($vars, array('content_for_layout' => $this->View->Blocks->get('content'))));
 
             // Renderizando Skel
-            $head_for_skel = join("\n", array_merge(array($this->View->Blocks->get('css'), $this->View->Blocks->get('meta')));
+            $head_for_skel = join("\n", array_merge(array($this->View->Blocks->get('css'), $this->View->Blocks->get('meta'))));
             $vars = array_merge($vars, array(
                 'content_for_skel' => $content,
                 'head_for_skel' => $head_for_skel,
-                'script_for_skel' => $this->Blocks->get('script'),
+                'script_for_skel' => $this->View->Blocks->get('script'),
                 'data' => $this->allData($vars)
             ));
 
@@ -79,8 +76,8 @@ class MustacheRenderer {
         return $this->mustache->getLoader()->getTemplates();
     }
     private function allData($vars) {
-        App::uses('JsonRenderer', 'PvtCake.Lib.Renderer');
-        $JsonRenderer = new JsonRenderer($this);
+        App::uses('JsonRenderer', 'PvtCake.Lib/Renderer');
+        $JsonRenderer = new JsonRenderer($this->View);
         return $JsonRenderer->serialize($vars);
     }
 }

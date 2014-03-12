@@ -1,12 +1,13 @@
 <?php
 class JsonRenderer {
-    public function __contruct(View $View) {
-        $this->View = $View;
+    public function __construct(View $View) {
+        $this->View = &$View;
     }
-    public function render($views, $vars = array()) {
+    public function render($views, $vars = array(), $layout = null) {
+
         $this->View->response->type('json');
-        $this->View->getEventManager()->dispatch(new CakeEvent('View.beforeRender', $this->View, array(join(' ', $view))));
-        $vars += $this->setTemplates();
+        $this->View->getEventManager()->dispatch(new CakeEvent('View.beforeRender', $this->View, array(join(' ', $views))));
+        $vars += $this->setTemplates($views, $layout);
         $return = $this->serialize($vars);
         if (!empty($vars['_jsonp'])) {
             $jsonp = $vars['_jsonp'];
@@ -18,7 +19,7 @@ class JsonRenderer {
                 $this->response->type('js');
             }
         }
-        $this->View->getEventManager()->dispatch(new CakeEvent('View.afterRender', $this->View, array(join(' ', $view))));
+        $this->View->getEventManager()->dispatch(new CakeEvent('View.afterRender', $this->View, array(join(' ', $views))));
         return $return;
     }
     public function serialize($vars) {
@@ -52,14 +53,17 @@ class JsonRenderer {
         return json_encode($data);
     }
 
-    private function setTemplates() {
+    private function setTemplates($views, $layout) {
         if ($this->View->request->is('ajax') && !empty($this->View->request->query['templates'])) {
-            App::uses('MustacheRenderer', 'PvtCake.Lib.Renderer');
+            App::uses('MustacheRenderer', 'PvtCake.Lib/Renderer');
             $MustacheRenderer = new MustacheRenderer($this->View);
             foreach ($views as $v) {
-                $MustacheRenderer->compile($v, array());
+                $MustacheRenderer->compile($MustacheRenderer->name($v), array());
             }
-            return array('templates' => $MustacheRenderer->getTemplates());
+            if (!empty($this->View->request->query['layout'])) {
+                $MustacheRenderer->compile($layout, array());
+            }
+            return array('templates' => $MustacheRenderer->templates());
         }
         return array();
     }

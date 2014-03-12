@@ -84,13 +84,4 @@ class AppController extends Controller {
         }
         return true;
     }
-
-
-    public function beforeRender() {
-        if( $this->request->is('ajax')) {
-            $this->response->type('application/json');
-            echo json_encode($this->viewVars);
-            exit;
-        }
-    }
 }
