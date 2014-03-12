@@ -24,7 +24,7 @@ class ConsoleController extends Controller
 
         try {
             if ($this->request->is('internal-ip') || $this->request->is('internal-host')) {
-                App::uses('WebShellDispatcher', 'Pvtlugin.Lib');
+                App::uses('WebShellDispatcher', 'PvtCake.Lib');
                 $Dispatcher = new WebShellDispatcher($this->request->params['pass'], false);
                 $Dispatcher->dispatch();
                 echo '<pre>' . file_get_contents($Dispatcher->out)  . '</pre>';

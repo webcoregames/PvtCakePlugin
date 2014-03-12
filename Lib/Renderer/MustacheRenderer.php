@@ -2,7 +2,7 @@
 class MustacheRenderer {
     public function __constructor(View $View) {
         $this->View = $View;
-        App::uses('MustacheLoader', 'PvtPlugin.Lib.Renderer');
+        App::uses('MustacheLoader', 'PvtCake.Lib.Renderer');
         $this->mustache = new Mustache_Engine(array(
             'cache' => TMP . 'cache' . DS . 'mustache',
             'loader' => new PivotMustacheLoader($this->View->template, array('extension' => '.html'))
@@ -79,6 +79,7 @@ class MustacheRenderer {
         return $this->mustache->getLoader()->getTemplates();
     }
     private function allData($vars) {
+        App::uses('JsonRenderer', 'PvtCake.Lib.Renderer');
         $JsonRenderer = new JsonRenderer($this);
         return $JsonRenderer->serialize($vars);
     }

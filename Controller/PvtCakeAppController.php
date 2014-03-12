@@ -2,6 +2,6 @@
 
 App::uses('AppController', 'Controller');
 
-class PvtPluginAppController extends AppController {
+class PvtCakeAppController extends AppController {
 
 }

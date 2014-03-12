@@ -54,7 +54,7 @@ class JsonRenderer {
 
     private function setTemplates() {
         if ($this->View->request->is('ajax') && !empty($this->View->request->query['templates'])) {
-            App::uses('MustacheRenderer', 'PvtPlugin.Lib.Renderer');
+            App::uses('MustacheRenderer', 'PvtCake.Lib.Renderer');
             $MustacheRenderer = new MustacheRenderer($this->View);
             foreach ($views as $v) {
                 $MustacheRenderer->compile($v, array());

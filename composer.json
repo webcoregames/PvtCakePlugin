@@ -1,5 +1,5 @@
 {
-    "name": "pvt/pvt-plugin",
+    "name": "pvt/pvt-cake",
     "description": "PVTPlugin CakePHP",
     "type": "cakephp-plugin",
     "require": {
