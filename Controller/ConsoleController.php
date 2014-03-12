@@ -24,18 +24,20 @@ class ConsoleController extends Controller
 
         try {
             if ($this->request->is('internal-ip') || $this->request->is('internal-host')) {
-                App::uses('WebShellDispatcher', 'PivotCakePlugin.Lib');
+                App::uses('WebShellDispatcher', 'Pvtlugin.Lib');
                 $Dispatcher = new WebShellDispatcher($this->request->params['pass'], false);
                 $Dispatcher->dispatch();
                 echo '<pre>' . file_get_contents($Dispatcher->out)  . '</pre>';
                 unlink($Dispatcher->out);
             } else {
-
-                echo 'Error: ' . env('REMOTE_ADDR') . '@' . env('HTTP_HOST');
+                echo 'Erro de autorização: ' . env('REMOTE_ADDR') . '@' . env('HTTP_HOST');
                 
             }
         } catch (Exception $e) {
-            echo 'Error: ' . $e->getMessage();
+            if (isset($Dispatcher->out) && file_exists($Dispatcher->out) {
+                unlink($Dispatcher->out);
+            }
+            echo 'Erro: ' . $e->getMessage();
         }
         exit;
     }

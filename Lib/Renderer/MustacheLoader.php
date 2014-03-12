@@ -1,5 +1,5 @@
 <?php
-class PivotMustacheLoader extends Mustache_Loader_FilesystemLoader {
+class MustacheLoader extends Mustache_Loader_FilesystemLoader {
     public function getTemplates() {
         return $this->templates;
     }

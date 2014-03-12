@@ -47,25 +47,26 @@ class AppController extends Controller {
                     'class' => 'alert-error'
                 )
             )
-        )
+        ),
+        'Pvt.Config'
     );
 
     public $helpers = array(
         'Session'
     );
-
-    public function beforeFilter()
-    {
+    
+    public function beforeFilter() {
         header('P3P:CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"');
         if (empty($this->request->params['manager'])) {
-            // $this->viewClass = 'PivotCakePlugin.Mustache';
-            // $this->helpers['PivotCakePlugin.Includer'] = array('includers' => 'site');
+            // $this->viewClass = 'PvtPlugin.Mustache';
+            // $this->asset = 'application';
+            // $this->helpers['PvtPlugin.Includer'] = array('includers' => 'application');
             $this->Auth->allow();
 
         }
         if (isset($this->request->params['manager']) && $this->request->params['manager'] === true) {
             $this->layout = 'manager';
-            // $this->helpers['PivotCakePlugin.Includer'] = array('includers' => 'admin');
+            // $this->helpers['PvtPlugin.Includer'] = array('includers' => 'admin');
             $this->helpers['Html'] = array('className' => 'BoostCake.BoostCakeHtml');
             $this->helpers['Form'] = array('className' => 'BoostCake.BoostCakeForm');
             $this->helpers['Paginator'] = array('className' => 'BoostCake.BoostCakePaginator');

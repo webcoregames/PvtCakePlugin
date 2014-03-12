@@ -1,19 +1,19 @@
 <?php
-	$config = array(
-	    'debug' => 2,
-		'Facebook' => array(
-			'appId' => '',
-            'appSecret' => '',
-			'page' => '',
-			'debug' => true
- 		),
-		'GoogleAnalytics' => array(
-			'ua' => ''
-		),
-		'Internal' => array(
-            'ip' => array('201.87.123.165',  '127.0.0.1')
-        ),
-        'Version' => '0',
-        'CDN' => 'http://localhost/'
-	);
-?>
+$config = array(
+    'debug' => 2,
+	'Facebook' => array(
+		'appId' => '',
+        'appSecret' => '',
+		'page' => '',
+		'debug' => true
+	),
+	'GoogleAnalytics' => array(
+		'ua' => ''
+	),
+	'Internal' => array(
+        'ip' => array('201.87.123.165',  '127.0.0.1'),
+        'host' => array('localhost')
+    ),
+    'Version' => '0',
+    'CDN' => 'http://localhost/'
+);
