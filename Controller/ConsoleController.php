@@ -34,7 +34,7 @@ class ConsoleController extends Controller
                 
             }
         } catch (Exception $e) {
-            if (isset($Dispatcher->out) && file_exists($Dispatcher->out) {
+            if (isset($Dispatcher->out) && file_exists($Dispatcher->out)) {
                 unlink($Dispatcher->out);
             }
             echo 'Erro: ' . $e->getMessage();
