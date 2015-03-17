@@ -348,7 +348,3 @@ Cache::config('_cake_model_', array(
 	'serialize' => ($engine === 'File'),
 	'duration' => $duration
 ));
-
-if (file_exists(dirname(__FILE__) . DS . 'general.php')) {
-    Configure::load('general');
-}

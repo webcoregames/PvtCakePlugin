@@ -6,7 +6,7 @@ class ConfigComponent extends Component {
             'base' => Router::url('/'),
             'site' => Router::url('/', true),
             'cdn' => Configure::read('CDN'),
-            'assets' => Router::url('/' . ((Configure::read('debug') > 0) ? 'developer/' : 'assets/'))
+            'assets' => Router::url('/' . ((Configure::read('debug') > 0) ? 'source/' : 'assets/'))
         ));
     }
     public function skel($path, $value = null) {
@@ -22,6 +22,7 @@ class ConfigComponent extends Component {
         $this->config = Hash::insert($this->config, 'all.' .$path, $value);
     }
     public function beforeRender(Controller $controller) {
+        $this->all('title', $this->viewVars['title_for_layout']);
         $config = (isset($this->config['all'])) ? $this->config['all'] : array();
         if (!$controller->request->is('ajax') && isset($this->config['skel'])) {
             $config = array_merge($config, $this->config['skel']);
