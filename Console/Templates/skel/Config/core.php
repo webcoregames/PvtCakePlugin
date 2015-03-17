@@ -4,20 +4,9 @@
  *
  * Use it to configure core behavior of Cake.
  *
- * PHP 5
- *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
  * @link          http://cakephp.org CakePHP(tm) Project
  * @package       app.Config
  * @since         CakePHP(tm) v 0.2.9
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 /**
@@ -33,6 +22,7 @@
  * In production mode, flash messages redirect after a time interval.
  * In development mode, you need to click the flash message to continue.
  */
+Configure::write('debug', 2);
 if (file_exists(dirname(__FILE__) . DS . 'general.php')) {
     Configure::load('general');
 }
@@ -47,16 +37,16 @@ if (file_exists(dirname(__FILE__) . DS . 'general.php')) {
  * - `handler` - callback - The callback to handle errors. You can set this to any callable type,
  *   including anonymous functions.
  *   Make sure you add App::uses('MyHandler', 'Error'); when using a custom handler class
- * - `level` - int - The level of errors you are interested in capturing.
+ * - `level` - integer - The level of errors you are interested in capturing.
  * - `trace` - boolean - Include stack traces for errors in log files.
  *
  * @see ErrorHandler for more information on error handling and configuration.
  */
-	Configure::write('Error', array(
-		'handler' => 'ErrorHandler::handleError',
-		'level' => E_ALL & ~E_DEPRECATED,
-		'trace' => true
-	));
+Configure::write('Error', array(
+    'handler' => 'ErrorHandler::handleError',
+    'level' => E_ALL & ~E_DEPRECATED,
+    'trace' => true
+));
 
 /**
  * Configure the Exception handler used for uncaught exceptions. By default,
@@ -72,19 +62,22 @@ if (file_exists(dirname(__FILE__) . DS . 'general.php')) {
  * - `renderer` - string - The class responsible for rendering uncaught exceptions. If you choose a custom class you
  *   should place the file for that class in app/Lib/Error. This class needs to implement a render method.
  * - `log` - boolean - Should Exceptions be logged?
+ * - `skipLog` - array - list of exceptions to skip for logging. Exceptions that
+ *   extend one of the listed exceptions will also be skipped for logging.
+ *   Example: `'skipLog' => array('NotFoundException', 'UnauthorizedException')`
  *
  * @see ErrorHandler for more information on exception handling and configuration.
  */
-	Configure::write('Exception', array(
-		'handler' => 'ErrorHandler::handleException',
-		'renderer' => 'ExceptionRenderer',
-		'log' => true
-	));
+Configure::write('Exception', array(
+    'handler' => 'ErrorHandler::handleException',
+    'renderer' => 'ExceptionRenderer',
+    'log' => true
+));
 
 /**
  * Application wide charset encoding
  */
-	Configure::write('App.encoding', 'UTF-8');
+Configure::write('App.encoding', 'UTF-8');
 
 /**
  * To configure CakePHP *not* to use mod_rewrite and to
@@ -96,7 +89,7 @@ if (file_exists(dirname(__FILE__) . DS . 'general.php')) {
  * /app/webroot/.htaccess
  *
  * And uncomment the App.baseUrl below. But keep in mind
- * that plugin assets such as images, CSS and Javascript files
+ * that plugin assets such as images, CSS and JavaScript files
  * will not work without URL rewriting!
  * To work around this issue you should either symlink or copy
  * the plugin assets into you app's webroot directory. This is
@@ -105,7 +98,34 @@ if (file_exists(dirname(__FILE__) . DS . 'general.php')) {
  * included primarily as a development convenience - and
  * thus not recommended for production applications.
  */
-	//Configure::write('App.baseUrl', env('SCRIPT_NAME'));
+//Configure::write('App.baseUrl', env('SCRIPT_NAME'));
+
+/**
+ * To configure CakePHP to use a particular domain URL
+ * for any URL generation inside the application, set the following
+ * configuration variable to the http(s) address to your domain. This
+ * will override the automatic detection of full base URL and can be
+ * useful when generating links from the CLI (e.g. sending emails)
+ */
+//Configure::write('App.fullBaseUrl', 'http://example.com');
+
+/**
+ * Web path to the public images directory under webroot.
+ * If not set defaults to 'img/'
+ */
+//Configure::write('App.imageBaseUrl', 'img/');
+
+/**
+ * Web path to the CSS files directory under webroot.
+ * If not set defaults to 'css/'
+ */
+//Configure::write('App.cssBaseUrl', 'css/');
+
+/**
+ * Web path to the js files directory under webroot.
+ * If not set defaults to 'js/'
+ */
+//Configure::write('App.jsBaseUrl', 'js/');
 
 /**
  * Uncomment the define below to use CakePHP prefix routes.
@@ -123,13 +143,13 @@ if (file_exists(dirname(__FILE__) . DS . 'general.php')) {
  *	`manager_index()` and `/manager/controller/index`
  *
  */
-	Configure::write('Routing.prefixes', array('manager'));
+//Configure::write('Routing.prefixes', array('admin'));
 
 /**
  * Turn off all caching application-wide.
  *
  */
-	//Configure::write('Cache.disable', true);
+//Configure::write('Cache.disable', true);
 
 /**
  * Enable cache checking.
@@ -140,7 +160,7 @@ if (file_exists(dirname(__FILE__) . DS . 'general.php')) {
  * or in each action using $this->cacheAction = true.
  *
  */
-	//Configure::write('Cache.check', true);
+//Configure::write('Cache.check', true);
 
 /**
  * Enable cache view prefixes.
@@ -150,7 +170,7 @@ if (file_exists(dirname(__FILE__) . DS . 'general.php')) {
  * for instance. Each version can then have its own view cache namespace.
  * Note: The final cache file name will then be `prefix_cachefilename`.
  */
-	//Configure::write('Cache.viewPrefix', 'prefix');
+//Configure::write('Cache.viewPrefix', 'prefix');
 
 /**
  * Session configuration.
@@ -189,19 +209,19 @@ if (file_exists(dirname(__FILE__) . DS . 'general.php')) {
  * the cake shell command: cake schema create Sessions
  *
  */
-	Configure::write('Session', array(
-		'defaults' => 'php'
-	));
+Configure::write('Session', array(
+    'defaults' => 'php'
+));
 
 /**
  * A random string used in security hashing methods.
  */
-	Configure::write('Security.salt', 'DYhG93b0qyJfIxfs2guVoUubWwvniR2G0FgaC9mi');
+Configure::write('Security.salt', 'DYhG93b0qyJfIxfs2guVoUubWwvniR2G0FgaC9mi');
 
 /**
  * A random numeric string (digits only) used to encrypt/decrypt strings.
  */
-	Configure::write('Security.cipherSeed', '76859309657453542496749683645');
+Configure::write('Security.cipherSeed', '76859309657453542496749683645');
 
 /**
  * Apply timestamps with the last modified time to static assets (js, css, images).
@@ -211,7 +231,7 @@ if (file_exists(dirname(__FILE__) . DS . 'general.php')) {
  * Set to `true` to apply timestamps when debug > 0. Set to 'force' to always enable
  * timestamping regardless of debug value.
  */
-	//Configure::write('Asset.timestamp', true);
+//Configure::write('Asset.timestamp', true);
 
 /**
  * Compress CSS output by removing comments, whitespace, repeating tags, etc.
@@ -220,31 +240,30 @@ if (file_exists(dirname(__FILE__) . DS . 'general.php')) {
  *
  * To use, prefix the CSS link URL with '/ccss/' instead of '/css/' or use HtmlHelper::css().
  */
-	//Configure::write('Asset.filter.css', 'css.php');
+//Configure::write('Asset.filter.css', 'css.php');
 
 /**
  * Plug in your own custom JavaScript compressor by dropping a script in your webroot to handle the
  * output, and setting the config below to the name of the script.
  *
- * To use, prefix your JavaScript link URLs with '/cjs/' instead of '/js/' or use JavaScriptHelper::link().
+ * To use, prefix your JavaScript link URLs with '/cjs/' instead of '/js/' or use JsHelper::link().
  */
-	//Configure::write('Asset.filter.js', 'custom_javascript_output_filter.php');
+//Configure::write('Asset.filter.js', 'custom_javascript_output_filter.php');
 
 /**
  * The class name and database used in CakePHP's
  * access control lists.
  */
-	Configure::write('Acl.classname', 'DbAcl');
-	Configure::write('Acl.database', 'default');
+Configure::write('Acl.classname', 'DbAcl');
+Configure::write('Acl.database', 'default');
 
 /**
  * Uncomment this line and correct your server timezone to fix
  * any date & time related errors.
  */
-	date_default_timezone_set('America/Sao_Paulo');
+//date_default_timezone_set('UTC');
 
 /**
- *
  * Cache Engine Configuration
  * Default settings provided below
  *
@@ -257,7 +276,8 @@ if (file_exists(dirname(__FILE__) . DS . 'general.php')) {
  * 		'path' => CACHE, //[optional] use system tmp directory - remember to use absolute path
  * 		'prefix' => 'cake_', //[optional]  prefix every cache file with this string
  * 		'lock' => false, //[optional]  use file locking
- * 		'serialize' => true, [optional]
+ * 		'serialize' => true, //[optional]
+ * 		'mask' => 0664, //[optional]
  *	));
  *
  * APC (http://pecl.php.net/package/APC)
@@ -319,7 +339,7 @@ $engine = 'File';
 // In development mode, caches should expire quickly.
 $duration = '+999 days';
 if (Configure::read('debug') > 0) {
-	$duration = '+10 seconds';
+    $duration = '+10 seconds';
 }
 
 // Prefix each application on the same server with a different string, to avoid Memcache and APC conflicts.
@@ -330,11 +350,12 @@ $prefix = 'myapp_';
  * object listings, and translation cache files are stored with this configuration.
  */
 Cache::config('_cake_core_', array(
-	'engine' => $engine,
-	'prefix' => $prefix . 'cake_core_',
-	'path' => CACHE . 'persistent' . DS,
-	'serialize' => ($engine === 'File'),
-	'duration' => $duration
+    'engine' => $engine,
+    'prefix' => $prefix . 'cake_core_',
+    'path' => CACHE . 'persistent' . DS,
+    'serialize' => ($engine === 'File'),
+    'duration' => $duration,
+    'mask' => 0775
 ));
 
 /**
@@ -342,9 +363,10 @@ Cache::config('_cake_core_', array(
  * is used to store schema descriptions, and table listings in connections.
  */
 Cache::config('_cake_model_', array(
-	'engine' => $engine,
-	'prefix' => $prefix . 'cake_model_',
-	'path' => CACHE . 'models' . DS,
-	'serialize' => ($engine === 'File'),
-	'duration' => $duration
+    'engine' => $engine,
+    'prefix' => $prefix . 'cake_model_',
+    'path' => CACHE . 'models' . DS,
+    'serialize' => ($engine === 'File'),
+    'duration' => $duration,
+    'mask' => 0775
 ));

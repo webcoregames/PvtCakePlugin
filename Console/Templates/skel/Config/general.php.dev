@@ -16,7 +16,8 @@ $config = array(
     ),
     'Assets' => array(
         'source' => 'source',
-        'dist' => 'dist'
+        'dist' => 'dist',
+        'asset' => 'site'
     ),
     'Version' => '0',
     'CDN' => 'http://localhost/'

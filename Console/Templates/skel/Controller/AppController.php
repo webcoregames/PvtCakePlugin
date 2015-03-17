@@ -34,54 +34,14 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller {
 
-
     public $components = array(
         'DebugKit.Toolbar',
-        'Session',
-        'Auth' => array(
-            'flash' => array(
-                'element' => 'alert',
-                'key' => 'auth',
-                'params' => array(
-                    'plugin' => 'BoostCake',
-                    'class' => 'alert-error'
-                )
-            )
-        ),
         'PvtCake.Config'
     );
 
-    public $helpers = array(
-        'Session'
-    );
-    
     public function beforeFilter() {
-        header('P3P:CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"');
         if (empty($this->request->params['manager'])) {
-            // $this->viewClass = 'PvtCake.Mustache';
-            // $this->asset = 'application';
-            // $this->helpers['PvtCake.Includer'] = array('includers' => 'application');
-            $this->Auth->allow();
-
+            $this->viewClass = 'PvtCake.Mustache';
         }
-        if (isset($this->request->params['manager']) && $this->request->params['manager'] === true) {
-            $this->layout = 'manager';
-            // $this->helpers['PvtCake.Includer'] = array('includers' => 'admin');
-            $this->helpers['Html'] = array('className' => 'BoostCake.BoostCakeHtml');
-            $this->helpers['Form'] = array('className' => 'BoostCake.BoostCakeForm');
-            $this->helpers['Paginator'] = array('className' => 'BoostCake.BoostCakePaginator');
-        }
-        parent::beforeFilter();
-    }
-
-    public function isAuthorized($user = null)
-    {
-        if (empty($this->request->params['manager'])) {
-            return true;
-        }
-        if (isset($this->request->params['manager'])) {
-            return isset($user['id']);
-        }
-        return true;
     }
 }
