@@ -4,7 +4,7 @@
     "version": "1.0.0",
     "type": "cakephp-plugin",
     "require": {
-        "cakephp/cakephp": "2.6.3",
+        "cakephp/cakephp": "2.7.*",
         "composer/installers": "v1.0.21",
         "cakephp/debug_kit": "2.2.5",
         "cakedc/migrations": "2.3.6",
