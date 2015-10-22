@@ -9,6 +9,8 @@
  * @since         CakePHP(tm) v 0.2.9
  */
 
+ date_default_timezone_set('America/Sao_Paulo');
+
 /**
  * Use the DS to separate the directories in other defines
  */
